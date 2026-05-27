@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2c3e50">
-  <title>AMMO PEROBAL - Portal do Consultor</title>
+  <title>AMMO - Portal do Consultor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
@@ -300,7 +300,7 @@
   <script>
     // 1. Definição das URLs
     const URL_BASE_1_GERAL = 'https://script.google.com/macros/s/AKfycbzrmJ0cFA-e5vnrThixRZy5-BNQJruVR_Oo0hak1uL1GaOcAVXkqQGQXz0_Gy_qknCPXg/exec'; 
-    const URL_BASE_2_PRINCIPAL = 'https://script.google.com/macros/s/AKfycbzdJmnXHPjJLFs_XtiGKLhwf2ZoDInfWlTjr5zN1Kae2qGKqIDqH8ZvoDQOXq09ODELWQ/exec'; 
+    const URL_BASE_2_PRINCIPAL = 'https://script.google.com/macros/s/AKfycbyt7EnnYa60CW4T200XHZacfHqDPHQ8OFHexSwMf14jR-W_eqDh-NMhaY_bCxaze2RLpA/exec'; 
 
     const ACOES_LEITURA = ['login', 'buscarMetas', 'listarAniversariantes', 'listarComissoes'];
 
@@ -459,7 +459,9 @@
           btnEntrar.classList.replace('bg-blue-600', 'bg-green-500');
           setTimeout(() => { iniciarApp(data.nome); }, 800);
         } else {
-          mostrarErroLogin(data.mensagem || "Usuário ou senha inválidos.");
+          // Segurança: nunca exibir detalhes internos vindos do servidor,
+          // pois podem conter login/senha de outros usuários ou dados da planilha.
+          mostrarErroLogin("Usuário ou senha inválidos. Confira os dados e tente novamente.");
         }
       } catch (error) {
         mostrarErroLogin("Tempo de conexão esgotado ou Erro de conexão.");
@@ -473,7 +475,11 @@
 
     function mostrarErroLogin(texto) {
       const divErro = document.getElementById('mensagemErroLogin');
-      divErro.innerText = texto;
+
+      // Mensagem fixa para proteger dados sensíveis.
+      // Não mostrar mensagens detalhadas do backend na tela de login.
+      divErro.innerText = "Usuário ou senha inválidos. Confira os dados e tente novamente.";
+
       divErro.classList.remove('hidden');
     }
 
